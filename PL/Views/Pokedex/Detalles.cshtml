@@ -1,0 +1,89 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model Pokemon
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="http://bootboxjs.com/bootbox.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<div class="modal" tabindex="-1" role="dialog" id="Modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="container mx-auto mt-4">
+                <div class="col">
+                    <div class="card" style="width: 45rem;">
+                        <img src="@Model.sprites.front_default" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            @foreach (Stat stats in Model.stats.Stats)
+                            {
+                                @*<p class="card-text">@stats.base_stat</p>*@
+                                <p class="card-text">@stats.stat.name</p>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: @stats.base_stat%" aria-valuenow=@stats.base_stat aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            }
+                            @foreach (Typee type in Model.types.Tipos)
+                            {
+                                <p class="card-text">
+                                    @*<a href="@Url.Action("GetAll", "Pokedex", new {Url = type.type.url})" class="btn btn-success">@type.type.Name<i class="bi bi-cart3" style="color: khaki" onclick="load()"></i> </a>*@
+                                    <input type="button" class="btn btn-success" id="button1" value=@type.type.Name onclick="location.href='@Url.Action("GetAll", "Pokedex" , new {Url=type.type.url})'" />
+                                </p>
+                            }
+                            <div class="modal-footer">
+                                @Html.ActionLink("Regresar", "GetAll", "Pokedex", htmlAttributes: new { @class = "btn btn-danger" })
+                            </div>
+                            <div class="loader" style="display: none" id="fade">
+                                <div class="text-center">
+                                    <div class="spinner-border" id="img" style="width: 20rem; height: 20rem; margin: 100% auto;" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#Modal').modal();
+</script>
+
+<style>
+    .loader {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: 50% 50% no-repeat rgb(249,249,249);
+        opacity: .8;
+    }
+</style>
+
+@section scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript">
+        function cargando() {
+            $("#fade").animate({ "opacity": ".8" }, 1000, function () { $("#fade").css("display", "Block"); });
+
+        }
+
+        function cerrar() {
+            $("#fade").animate({ "opacity": "0" }, 1000, function () { $("#fade").css("display", "none"); });
+        }
+
+        $(document).ready(function () {
+            window.onload = cerrar;
+            $("#fade").click(function () { cerrar(); });
+            window.onbeforeunload = cargando;
+        });
+
+    </script>
+}
